@@ -4,6 +4,7 @@
 
 cd /
 cd home/pi/Boot
+git pull origin master
 sudo python Run.py
 cd /
 
