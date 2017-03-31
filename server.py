@@ -1,35 +1,18 @@
 import socket
-import os
+import sys
 
-s=socket.socket()
-host=socket.gethostname()
-port=12345
-s.bind((host,port))
-
-s.listen(5)
-
-print "server listening"
+# Create a TCP/IP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server_address = ('192.168.0.2', 10000)
+print >>sys.stderr, 'starting up on %s port %s' % server_address
+sock.bind(server_address)
+sock.listen(1)
 while True:
-        c,addr=s.accept()
-        print "connection from "+ str(addr)
-        data=c.recv(1024)
-        #print('Server received', repr(data))
+    # Find connections
+    connection, client_address = sock.accept()
+    try:
+        data = connection.recv(999)
+        print data
 
-        filename='sendData.txt'
-        size=os.path.getsize("sendData.txt")
-        f = open(filename,'rb')
-        l = f.read(1024)
-        processed=0
-        while (l):
-
-            c.send(l)
-            #print('Sent ',repr(l))
-            l = f.read(1024)
-            processed+=1024
-            print ("progress: "+str(int(100*(float(processed/float(size))))))+"%"
-
-
-        f.close()
-        print('Done sending')
-        #c.send('Thank you for connecting')
-        c.close()
+    except:
+        connection.close()
