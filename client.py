@@ -1,33 +1,25 @@
 import socket
-import sys
+import os
 
+s = socket.socket()
+host = socket.gethostname()
+port = 12345
+s.connect((host,port))
 
-class cInstance():
-    def __init__(self):
-        self.sock=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.server_address = ("192.168.0.2", 10000)
-        self.sock.connect(self.server_address)
+def send(s,message):
+    message=message.encode("utf-8")
+    s.send(message)
 
+def recieve(s):
+    return str(s.recv(1024).decode("utf-8"))
 
-    def sendMessage(self,message):
-        sock=self.sock
-        sock.send(message)
+def recieveFile(s,fileName):
+    f=open(fileName,"w")
+    data=recieve(s)
+    while data:
+        f.write(data)
+        data=recieve(s)
 
-    def recieveFile(self,fileName):
-        sock=self.sock
-        with open(fileName,"wb") as f:
-            while True:
-                data=sock.recv(1024)
-                if not data:
-                    break
-                f.write(data)
-            f.close()
-            print ("successfull file transfer")
-    def close(self):
-        self.sock.close()
-
-
-c=cInstance()
-c.sendMessage("this is a test of the emergency broadcast system")
-c.recieveFile("test.txt")
-c.close()
+send(s,"Message from Client")
+print(recieve(s))
+recieveFile(s,"received.txt")
