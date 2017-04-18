@@ -2,6 +2,7 @@ import socket
 import os
 
 request=raw_input("what movie do you want to watch?")
+
 s = socket.socket()
 host = "192.168.0.2"#socket.gethostname()
 port = 10000
@@ -37,6 +38,9 @@ def recieveFile(s,fileName):
     print "total recieved: "+str(recieved)
    # print "filesize: "+str(os.path.getsize("/home/pi/PiComs/"+fileName))
 
-
-send(s,request)
-recieveFile(s,request+".mp4")
+def fetch(request):
+    send(s,request)
+    if request == "view":
+        recieveFile(s,"Storage/movieData.txt")
+    else:
+        recieveFile(s,"Storage/"+request+".mp4")
