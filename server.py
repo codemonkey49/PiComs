@@ -37,6 +37,8 @@ while True:
         request=recieve(c)
         print ("request: "+request)
         Storage="E:\movies"+'\\'
+
+        movies=[]
         for root, dirs, files in os.walk(Storage):
             for file in files:
                 file=file.split(".")
@@ -44,6 +46,7 @@ while True:
                 file=file[0]
                 #print (file)
                 #print (request)
+                movies.append(file)
                 if file==request:
                     file=(Storage+file+"."+ext)
                     #size=(os.path.getsize(file))
@@ -54,6 +57,15 @@ while True:
                     #sendFile(c,"./Storage/sendData.txt")
                     print ("file finished sending")
                     break
+            if (request=="view"):
+                print ("view request recieved, sending available")
+                f=open(Storage+"movieData.txt","w+")
+                for i in movies:
+                    f.write(i)
+                    f.write("\n")
+                print ("sending movie library")
+                sendFile(c,Storage+"movieData.txt")
+
             #send("file not found",c)
 
 
